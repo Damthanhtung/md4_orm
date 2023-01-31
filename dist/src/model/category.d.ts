@@ -1,4 +1,4 @@
 export declare class Category {
-    id: number;
-    name: string;
+    idCategory: number;
+    nameCategory: string;
 }

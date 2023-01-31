@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajax</title>
+
+</head>
+<body>
+<button onclick="showFormAdd()">Them Moi</button>
+<button onclick="showHome()">Trang chu</button>
+<input type="text">
+<button type="submit">Search</button>
+<div id ="body">
+</div>
+<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    // Initialize Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyAgTYalOSpZCIJEDOwnpp_vB5pUKbAXb1o",
+        authDomain: "sale-2a375.firebaseapp.com",
+        projectId: "sale-2a375",
+        storageBucket: "sale-2a375.appspot.com",
+        messagingSenderId: "169886749162",
+        appId: "1:169886749162:web:b81840cfa9640f8b7ae293",
+        measurementId: "G-LDX3DTZ40H"
+    };
+    firebase.initializeApp(firebaseConfig);
+</script>
+<script src="src/home.js"></script>
+</body>
+</html>

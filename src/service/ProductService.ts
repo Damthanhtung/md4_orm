@@ -8,8 +8,9 @@ class ProductService {
     }
 
     getAll = async () => {
-        let sql ='select p.id, p.name, p.price, p.image, c.id as idCategory, c.name as nameCategory from product p join category c on p.category = c.id'
+        let sql ='select * from product join category on product.category = category.idCategory'
         let products = await this.productRepository.query(sql);
+
         // console.log(products)
         return products;
     }
@@ -54,6 +55,15 @@ class ProductService {
         }
         return  this.productRepository.delete({id: id});
     }
+    search = async (name) => {
+        let sql = `SELECT * FROM product p JOIN category c ON p.category = c.idCategory WHERE name LIKE '%${name}%'`
+        let products = await this.productRepository.query(sql);
+        if (!products) {
+            return null;
+        }
+        return products;
+    }
+
 }
 
 export default new ProductService();

@@ -16,11 +16,11 @@ let Category = class Category {
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], Category.prototype, "id", void 0);
+], Category.prototype, "idCategory", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Category.prototype, "name", void 0);
+], Category.prototype, "nameCategory", void 0);
 Category = __decorate([
     (0, typeorm_1.Entity)()
 ], Category);

@@ -2,9 +2,9 @@ import {Router} from "express";
 import homeController from "../controller/HomeController";
 import {router} from "./router";
 export const productRouter = Router();
-productRouter.get('/create', homeController.showFormCreate);
-productRouter.post('/create' , homeController.create);
-productRouter.get('/edit/:id', homeController.showFormEdit);
-productRouter.post('/edit/:id', homeController.update);
-productRouter.get('/delete/:id', homeController.showFormDelete);
-productRouter.get('/deleteProduct/:id', homeController.remove);
+
+productRouter.get('/', homeController.getAll)
+productRouter.post('/' , homeController.create);
+productRouter.put('/:id', homeController.update);
+productRouter.delete('/:id', homeController.remove);
+productRouter.get('/find-by-name', homeController.search);

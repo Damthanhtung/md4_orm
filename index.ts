@@ -1,22 +1,16 @@
 import express from 'express';
 import {router} from "./src/router/router";
 import bodyParser from "body-parser";
-import fileUpload from 'express-fileupload';
-import  mongoose from "mongoose";
 import session from "express-session";
 import {AppDataSource} from "./src/data-source";
+import cors from 'cors';
 
 
 const app = express();
 AppDataSource.initialize().then(()=>{
     console.log('Connect database success!!!')
 })
-mongoose.set('strictQuery', true);
-app.set('views', './src/views');
-app.set('view engine', 'ejs');
-app.use(fileUpload({
-    createParentPath: true
-}));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('./public'));
