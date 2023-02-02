@@ -6,5 +6,6 @@ import {userRouter} from "./userRouter";
 
 export const router = Router();
 router.use('/products', productRouter);
-router.use('/users', userRouter);
+// router.use('/users', userRouter);
+router.use('/auth',userRouter)
 router.use('/orders', orderRouter);

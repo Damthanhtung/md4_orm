@@ -1,43 +1,58 @@
-showHome()
+
 function showList() {
-    $.ajax({
-        type: 'GET',
-        url: "http://localhost:3000/products",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        success : (products) => {
-            let html = ''
-            console.log(products)
-            products.map(item => {
-                html += `<tr>
-                             <td>${item.id}</td>
-                             <td>${item.name}</td>
-                             <td>${item.price}</td>
-                             <td><img src="${item.image}" style="height: 50px"></td> 
-                             <td>${item.nameCategory}</td>
-                             <td><button onclick="remove(${item.id})">Delete</button></td>
-                             <td><button onclick="showFormEdit(${item.id})">Edit</button></td>
-                         </tr>`
-            })
-            $("#tbody").html(html)
-        }
-    })
-}
-function showFormAdd() {
-    $("#body").html(`
-<input type="text" id="name" placeholder="name">
-<input type="text" id="price" placeholder="price">
-<input type="file" id="image" onchange="uploadImage(event)" placeholder="image">
-<input type="text" id="category" placeholder="category">
+    let token = localStorage.getItem('token');
+    if(token){
+        token = JSON.parse(token)
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:3000/products',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token.token
+            },
+            success: (products) => {
+                if(token.role === 'admin'){
+                    let html = ''
+                    products.map(item => {
+                        html += `<tr>
+    <td>${item.id}</td>
+    <td>${item.name}</td>
+    <td>${item.price}</td>
+    <td><img src="${item.image}" style="height: 150px; width: 150px"></td>
+    <td>${item.category}</td>
+    <td>${item.nameCategory}</td>
+    <td><button onclick="showFormEdit('${item.id}')">Edit</button></td>
+    <td><button onclick="remove('${item.id}')">Delete</button></td>
+</tr>
+`})
+                    $('#tbody').html(html)
+                }else {
+                    let html = ''
+                    products.map(item => {
+                        html += `<tr>
+    <td>${item.id}</td>
+    <td>${item.name}</td>
+    <td>${item.price}</td>
+    <td><img src="${item.image}" style="height: 150px; width: 150px"></td>
+    <td>${item.category}</td>
+    <td>${item.nameCategory}</td>
+    <td><button onclick="showFormEdit('${item.id}')">Mua</button></td>
+</tr>
+`})
+                    $('#tbody').html(html)
+                }
+            }
+
+        })
+    }
 
 
-<button onclick="add()">Add</button>
-<div id="imgDiv"></div>
-`)
 }
 function showHome() {
-    $("#body").html(`
+    let token = localStorage.getItem('token');
+    if (token) {
+        token = JSON.parse(token)
+        $("#body").html(`
     <table border="1">
     <thead>
     <tr>
@@ -54,34 +69,60 @@ function showHome() {
     </tbody>
    </table>
     `)
-    showList()
-}
-function add() {
-    let name = $("#name").val();
-    let price = $("#price").val();
-    let image = localStorage.getItem('image');
-    let category = $("#category").val();
-
-    let product = {
-        name: name,
-        image: image,
-        price: price,
-        category: category
+        showList()
+    } else {
+        showFormLogin()
     }
-    $.ajax({
-        type: 'POST',
-        url: "http://localhost:3000/products",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        data: JSON.stringify(product),
-        success : () => {
-            showHome()
+}
+function showFormAdd() {
+    let token = localStorage.getItem('token');
+    if(token) {
+        token = JSON.parse(token)
+        $("#body").html(`
+<input type="text" id="name" placeholder="name">
+<input type="text" id="price" placeholder="price">
+<input type="file" id="image" onchange="uploadImage(event)" placeholder="image">
+<input type="text" id="category" placeholder="category">
+<button onclick="add()">Add</button>
+<div id="imgDiv"></div>
+`)
+    }
+
+}
+
+function add() {
+    let token = localStorage.getItem('token');
+    if (token) {
+        token = JSON.parse(token)
+        let name = $("#name").val();
+        let price = $("#price").val();
+        let image = localStorage.getItem('image');
+        let category = $("#category").val();
+
+        let product = {
+            name: name,
+            image: image,
+            price: price,
+            category: category
         }
-    })
+        $.ajax({
+            type: 'POST',
+            url: "http://localhost:3000/products",
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token.token
+            },
+            data: JSON.stringify(product),
+            success : () => {
+                showHome()
+            }
+        })
+    }
 }
 function showFormEdit(id) {
-
+    let token =  localStorage.getItem('token');
+    if (token) {
+        token = JSON.parse(token)
         $("#body").html(`
             <input type="text" id="name" placeholder="name" >
             <input type="text" id="price" placeholder="price">
@@ -91,43 +132,54 @@ function showFormEdit(id) {
             <button onclick="edit('${id}')">Edit</button>
             <div id="imgDiv"></div>
 `)
+    }
 
 }
 function edit(id) {
-    let name = $("#name").val();
-    let price = $("#price").val();
-    let image = localStorage.getItem('image');
-    let category = $("#category").val();
+    let token = localStorage.getItem('token');
+    if (token) {
+        token = JSON.parse(token)
+        let name = $("#name").val();
+        let price = $("#price").val();
+        let image = localStorage.getItem('image');
+        let category = $("#category").val();
 
-    let product = {
-        name: name,
-        image: image,
-        price: price,
-        category: category
-    }
-    $.ajax({
-        type: 'PUT',
-        url: `http://localhost:3000/products/${id}`,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        data: JSON.stringify(product),
-        success : () => {
-            showHome()
+        let product = {
+            name: name,
+            image: image,
+            price: price,
+            category: category
         }
-    })
+        $.ajax({
+            type: 'PUT',
+            url: `http://localhost:3000/products/${id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token.token
+            },
+            data: JSON.stringify(product),
+            success: () => {
+                showHome()
+            }
+        })
+    }
 }
 function remove(id) {
-    $.ajax({
-        type: 'DELETE',
-        url: `http://localhost:3000/products/${id}`,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        success : () => {
-            showHome()
-        }
-    })
+    let token = localStorage.getItem('token');
+    if (token) {
+        token = JSON.parse(token)
+        $.ajax({
+            type: 'DELETE',
+            url: `http://localhost:3000/products/${id}`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + token.token
+            },
+            success : () => {
+                showHome()
+            }
+        })
+    }
 }
 function uploadImage(e) {
     let fbBucketName = 'images';
@@ -184,5 +236,68 @@ function uploadImageEdit(e, id) {
             document.getElementById(`imgDiv`).innerHTML = `<img src="${downloadURL}" alt="${downloadURL}"  style="width: 500px;">`
             localStorage.setItem('image', downloadURL);
         });
+}
+function showFormLogin(){
+    $('#body').html(`<nav>
+  <div>
+    <input type="text" placeholder="Username or Email" id="username">
+    <input type="password" placeholder="Password" id="password">
+    <button type="submit" onclick="Login()">Login</button>
+  </div>
+</nav>`)
+}
+function Login(){
+    let username = $('#username').val();
+    let password = $('#password').val();
+    let user = {
+        username: username,
+        password: password
+    }
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost:3000/auth/login',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: JSON.stringify(user),
+        success: (token) => {
+            localStorage.setItem('token',JSON.stringify(token))
+            showHome();
+            showNav();
+        }
+    })
+}
+function logOut(){
+    localStorage.clear()
+    showFormLogin()
+    showNav()
+}
+function showFormSignup() {
+    $('#body').html(`<nav>
+  <div>
+    <input type="text" placeholder="Username or Email" id="username">
+    <input type="password" placeholder="Password" id="password">
+    <button type="submit" onclick="signUp()">SignUp</button>
+  </div>
+</nav>`)
+}
+function signUp(){
+    let username = $('#username').val();
+    let password = $('#password').val();
+    let user = {
+        username: username,
+        password: password
+    }
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost:3000/auth/register',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: JSON.stringify(user),
+        success: () => {
+            showFormLogin()
+        }
+    })
 }
 

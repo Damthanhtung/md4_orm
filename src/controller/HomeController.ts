@@ -94,6 +94,7 @@ class HomeController {
             res.status(500).json(err.message);
         }
     }
+
 }
 
 export default new HomeController();
